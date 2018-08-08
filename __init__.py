@@ -14,7 +14,7 @@ def create_menu():
 
     settings_action = QAction('Settings', mw)
     menu.addAction(settings_action)
-    create_action.triggered_conntect(open_settings)
+    create_action.triggered.connect(open_settings)
 
 
 def create_kanji_notes():
