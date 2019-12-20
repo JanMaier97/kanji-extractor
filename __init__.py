@@ -1,5 +1,6 @@
 from aqt import mw
 from aqt.qt import QMenu, QAction
+from .note_manager import NoteManager
 
 
 def create_menu():
@@ -19,6 +20,7 @@ def create_menu():
 
 def create_kanji_notes():
     pass
+
 
 
 def open_settings():
