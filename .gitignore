@@ -3,8 +3,9 @@ tags
 user_files/
 src/forms
 
-config.json
+/config.json
 meta.json
+/__init__.py
 
 # Swap
 [._]*.s[a-v][a-z]
