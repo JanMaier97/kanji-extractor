@@ -1,0 +1,9 @@
+{
+    "common": {
+        "deck_id": 0,
+        "vocab_mid": 0,
+        "vocab_field": "",
+        "kanji_mid": 0, 
+        "kanji_field": ""
+    }
+}
