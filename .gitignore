@@ -1,8 +1,10 @@
 tags
 
 user_files/
+src/forms
 
 config.json
+meta.json
 
 # Swap
 [._]*.s[a-v][a-z]
