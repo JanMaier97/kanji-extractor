@@ -41,7 +41,7 @@ class KanjiExtractor(NoteManager):
         return nids
 
     def _check_nids(self, nids):
-        mids = mw.col.db.list("select mid from notes where id in " + ids2str(nids))
+        mids = mw.col.db.list("select distinct mid from notes where id in " + ids2str(nids))
         if len(mids) == 0:
             raise NoteSelectionError("No Kanji notes have been selected.")
         if len(mids) > 1:
@@ -56,8 +56,7 @@ class KanjiExtractor(NoteManager):
         for kanji in kanji_characters:
             note = Note(mw.col, note_model)
 
-            # self._note_writer.write_note(kanji, note)
-            note[self._config['kanji_field']] = kanji
+            self._note_writer.write_note(kanji, note)
 
             mw.col.addNote(note)
             nids.append(note.id)
