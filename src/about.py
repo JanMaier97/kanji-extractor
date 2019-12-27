@@ -1,6 +1,5 @@
 import aqt.forms
 from aqt.qt import *
-from .forms.about import Ui_About
 
 class AboutDialog(QDialog):
     def __init__(self):
