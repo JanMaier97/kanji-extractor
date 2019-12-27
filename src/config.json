@@ -5,5 +5,17 @@
         "vocab_field": "",
         "kanji_mid": 0, 
         "kanji_field": ""
+    },
+    "kanjidic": {
+        "mid": "",
+        "kanji": "",
+        "meaning": "",
+        "onyomi": "",
+        "kunyomi": "",
+        "strokecount":"",
+        "radical": "",
+        "frequency": "",
+        "grade": false,
+        "jlpt": false
     }
 }
