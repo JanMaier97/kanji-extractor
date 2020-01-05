@@ -61,7 +61,17 @@ class SettingsDialog(QDialog):
         self._config['common']['vocab_field'] = self.ui.vocab_field.currentText()
 
         self._config['common']['kanji_mid'] = mw.col.models.byName(self.ui.kanji_model.currentText())['id']
+        self._config['common']['kanji'] = self.ui.cb_kanji.currentText()
         self._config['common']['deck_id'] = mw.col.decks.byName(self.ui.kanji_deck.currentText())['id']
+
+        self._config['kanjidic']['mid'] = self._config['common']['kanji_mid']
+        self._config['kanjidic']['kanji'] = self.ui.cb_kanji.currentText()
+        self._config['kanjidic']['meaning'] = self.ui.cb_meaning.currentText()
+        self._config['kanjidic']['onyomi'] = self.ui.cb_onyomi.currentText()
+        self._config['kanjidic']['kunyomi'] = self.ui.cb_kunyomi.currentText()
+        self._config['kanjidic']['strokecount'] = self.ui.cb_strokecount.currentText()
+        self._config['kanjidic']['frequency'] = self.ui.cb_frequency.currentText()
+        self._config['kanjidic']['radical'] = self.ui.cb_radical.currentText()
 
         mw.addonManager.writeConfig(__name__, self._config)
         self.accept()
