@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>444</width>
-    <height>446</height>
+    <height>387</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -260,6 +260,133 @@
       <attribute name="title">
        <string>Tags</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>JLPT</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QCheckBox" name="jlpt_check">
+            <property name="text">
+             <string>enable JLPT Tags</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="jlpt_prefix_label">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Tag Prefix</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="jlpt_prefix_line">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="jlpt_postfix_label">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Tag Postfix</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="jlpt_postfix_line">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="title">
+          <string>Kanji Grade</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QCheckBox" name="grade_check">
+            <property name="text">
+             <string>enable Kanji Grade Tags</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="grade_prefix_label">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Tag Prefix</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="grade_prefix_line">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="grade_postfix_label">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Tag Postfix</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="grade_postfix_line">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
@@ -374,5 +501,134 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>jlpt_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>jlpt_postfix_line</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>jlpt_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>jlpt_prefix_line</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>grade_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>grade_prefix_line</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>grade_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>grade_postfix_line</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>jlpt_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>jlpt_prefix_label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>92</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>jlpt_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>jlpt_postfix_label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>137</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>grade_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>grade_postfix_label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>grade_check</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>grade_prefix_label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>238</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
