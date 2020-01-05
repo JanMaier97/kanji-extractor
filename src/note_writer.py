@@ -76,13 +76,13 @@ class KanjiDicNoteWriter(NoteWriter):
         content = self._get_tag_content(subtree, "./misc/jlpt") 
         if content == []:
             return ""
-        return "jltp_" + content[0]
+        return self._config['jlpt_prefix'] + content[0] + self._config('jlpt_postfix')
 
     def _get_grade_tag(self, subtree):
         content = self._get_tag_content(subtree, "./misc/grade")
         if content == []:
             return ""
-        return "grade_" + content[0]
+        return self._config['grade_prefix'] + content[0] + self._config['grade_postfix']
 
     def _get_frequency(self, subtree):
         content = self._get_tag_content(subtree, "./misc/freq")

@@ -91,6 +91,7 @@ class SettingsDialog(QDialog):
         self.accept()
 
     def _check_config(self):
+        # TODO: also check valid tag charactesr (e.g: no whitepspace) or sanitize input directly
         if self.ui.jlpt_check.checkState() and not (self.ui.jlpt_prefix_line.text() + self.ui.jlpt_postfix_line.text()):
             raise ConfigSaveError("The postfix and prefix for the JLPT tags cannot be empty.")
 
