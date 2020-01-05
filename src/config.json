@@ -16,6 +16,10 @@
         "radical": "",
         "frequency": "",
         "grade": false,
-        "jlpt": false
+        "jlpt": false,
+        "jlpt_prefix": "JLPT_",
+        "jlpt_postfix": "",
+        "grade_prefix": "Kanji_Grade_",
+        "grade_postfix": ""
     }
 }

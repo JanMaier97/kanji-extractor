@@ -57,6 +57,12 @@ class SettingsDialog(QDialog):
 
 
     def _save_config(self):
+        try:
+            self._check_config()
+        except ConfigSaveError as e:
+            showInfo(e.message + "\nPlease check your settings.")
+            return
+
         self._config['common']['vocab_mid'] = mw.col.models.byName(self.ui.vocab_model.currentText())['id']
         self._config['common']['vocab_field'] = self.ui.vocab_field.currentText()
 
@@ -73,9 +79,23 @@ class SettingsDialog(QDialog):
         self._config['kanjidic']['frequency'] = self.ui.cb_frequency.currentText()
         self._config['kanjidic']['radical'] = self.ui.cb_radical.currentText()
 
+        self._config['kanjidic']['grade'] = self.ui.grade_check.checkState()
+        self._config['kanjidic']['grade_prefix'] = self.ui.grade_prefix_line.text()
+        self._config['kanjidic']['grade_postfix'] = self.ui.grade_postfix_line.text()
+
+        self._config['kanjidic']['jlpt'] = self.ui.jlpt_check.checkState()
+        self._config['kanjidic']['jlpt_prefix'] = self.ui.jlpt_prefix_line.text()
+        self._config['kanjidic']['jlpt_postfix'] = self.ui.jlpt_postfix_line.text()
+
         mw.addonManager.writeConfig(__name__, self._config)
         self.accept()
 
+    def _check_config(self):
+        if self.ui.jlpt_check.checkState() and not (self.ui.jlpt_prefix_line.text() + self.ui.jlpt_postfix_line.text()):
+            raise ConfigSaveError("The postfix and prefix for the JLPT tags cannot be empty.")
+
+        if self.ui.grade_check.checkState() and not (self.ui.grade_prefix_line.text() + self.ui.grade_postfix_line.text()):
+            raise ConfigSaveError("The postfix and prefix for the kanji grade tags cannot be empty.")
 
     def on_kanji_cb_activated(self, index):
         for cb in self._kanji_field_cbs:
@@ -129,6 +149,15 @@ class SettingsDialog(QDialog):
         
         self.on_kanji_cb_activated(0)
 
+
+        self.ui.jlpt_check.setCheckState(self._config['kanjidic']['jlpt'])
+        self.ui.jlpt_prefix_line.setText(self._config['kanjidic']['jlpt_prefix'])
+        self.ui.jlpt_postfix_line.setText(self._config['kanjidic']['jlpt_postfix'])
+
+        self.ui.grade_check.setCheckState(self._config['kanjidic']['grade'])
+        self.ui.grade_prefix_line.setText(self._config['kanjidic']['grade_prefix'])
+        self.ui.grade_postfix_line.setText(self._config['kanjidic']['grade_postfix'])
+
     def _set_kanji_field(self, kanji_cb, field_text):
         if kanji_cb.findText(field_text) == -1:
             showInfo('Could not find the field "{0}" for the note type "{1}".\nPlease update your configuration.'.format(field_text, self.ui.kanji_model.currentText()))
@@ -148,3 +177,6 @@ class ConfigLoadError(Exception):
     def __init__(self, message):
         self.message = message
 
+class ConfigSaveError(Exception):
+    def __init__(self, message):
+        self.message = message
