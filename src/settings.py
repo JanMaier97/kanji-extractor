@@ -92,7 +92,9 @@ class SettingsDialog(QDialog):
             self.ui.kanji_deck.setCurrentText(deck['name'])
 
         kanji_model = mw.col.models.get(self._config['kanjidic']['mid'])
-        if not kanji_model is None:
+        if kanji_model is None:
+            showInfo('Could not find the note type with the id "{0}" for the kanji notes.\nPlease check your configuration.'.format(self._config['kanjidic']['mid']))
+        else:
 
             for cb in self._kanji_field_cbs:
                 cb.addItems(mw.col.models.fieldNames(kanji_model))
@@ -100,22 +102,28 @@ class SettingsDialog(QDialog):
 
             self.ui.kanji_model.setCurrentText(kanji_model['name'])
 
-            if not self._config['kanjidic']['kanji']:
-                self.ui.cb_kanji.setCurrentText(self._config['kanjidic']['kanji'])
-            if not self._config['kanjidic']['meaning']:
-                self.ui.cb_meaning.setCurrentText(self._config['kanjidic']['meaning'])
-            if not self._config['kanjidic']['onyomi']:
-                self.ui.cb_onyomi.setCurrentText(self._config['kanjidic']['onyomi'])
-            if not self._config['kanjidic']['kunyomi']:
-                self.ui.cb_kunyomi.setCurrentText(self._config['kanjidic']['kunyomi'])
-            if not self._config['kanjidic']['strokecount']:
-                self.ui.cb_strokecount.setCurrentText(self._config['kanjidic']['strokecount'])
-            if not self._config['kanjidic']['radical']:
-                self.ui.cb_radical.setCurrentText(self._config['kanjidic']['radical'])
-            if not self._config['kanjidic']['frequency']:
-                self.ui.cb_frequency.setCurrentText(self._config['kanjidic']['frequency'])
+            if self._config['kanjidic']['kanji']:
+                self._set_kanji_field(self.ui.cb_kanji, self._config['kanjidic']['kanji'])
+            if self._config['kanjidic']['meaning']:
+                self._set_kanji_field(self.ui.cb_meaning, self._config['kanjidic']['meaning'])
+            if self._config['kanjidic']['onyomi']:
+                self._set_kanji_field(self.ui.cb_onyomi, self._config['kanjidic']['onyomi'])
+            if self._config['kanjidic']['kunyomi']:
+                self._set_kanji_field(self.ui.cb_kunyomi, self._config['kanjidic']['kunyomi'])
+            if self._config['kanjidic']['strokecount']:
+                self._set_kanji_field(self.ui.cb_strokecount, self._config['kanjidic']['strokecount'])
+            if self._config['kanjidic']['radical']:
+                self._set_kanji_field(self.ui.cb_radical, self._config['kanjidic']['radical'])
+            if self._config['kanjidic']['frequency']:
+                self._set_kanji_field(self.ui.cb_frequency, self._config['kanjidic']['frequency'])
         
         self.on_kanji_cb_activated(0)
+
+    def _set_kanji_field(self, kanji_cb, field_text):
+        if kanji_cb.findText(field_text) == -1:
+            showInfo('Could not find the field "{0}" for the note type "{1}".\nPlease update your configuration.'.format(field_text, self.ui.kanji_model.currentText()))
+        else:
+            kanji_cb.setCurrentText(field_text)
 
 
     def _get_selectable_kanji_fields(self, additional_item):
