@@ -28,10 +28,20 @@ class SettingsDialog(QDialog):
     def _setup_ui(self):
         self._setup_vocab()
         self._setup_kanji()
+        self._setup_tags()
 
         self.ui.apply_btn.clicked.connect(self._save_config)
         self.ui.cancel_btn.clicked.connect(self.reject)
+
+    def _on_tag_line_edited(self):
+        sender = self.sender()
+        sender.setText(mw.col.tags.split(sender.text())[0])
         
+    def _setup_tags(self):
+        self.ui.jlpt_prefix_line.editingFinished.connect(self._on_tag_line_edited)
+        self.ui.jlpt_postfix_line.editingFinished.connect(self._on_tag_line_edited)
+        self.ui.grade_prefix_line.editingFinished.connect(self._on_tag_line_edited)
+        self.ui.grade_postfix_line.editingFinished.connect(self._on_tag_line_edited)
 
     def _setup_vocab(self):
         self.ui.vocab_model.currentTextChanged.connect(self._on_vocab_model_changed)
@@ -91,7 +101,6 @@ class SettingsDialog(QDialog):
         self.accept()
 
     def _check_config(self):
-        # TODO: also check valid tag charactesr (e.g: no whitepspace) or sanitize input directly
         if self.ui.jlpt_check.checkState() and not (self.ui.jlpt_prefix_line.text() + self.ui.jlpt_postfix_line.text()):
             raise ConfigSaveError("The postfix and prefix for the JLPT tags cannot be empty.")
 
