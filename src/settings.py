@@ -35,7 +35,8 @@ class SettingsDialog(QDialog):
 
     def _on_tag_line_edited(self):
         sender = self.sender()
-        sender.setText(mw.col.tags.split(sender.text())[0])
+        currentText = sender.text().strip()
+        sender.setText(currentText if currentText == "" else mw.col.tags.split(currentText)[0])
         
     def _setup_tags(self):
         self.ui.jlpt_prefix_line.editingFinished.connect(self._on_tag_line_edited)
