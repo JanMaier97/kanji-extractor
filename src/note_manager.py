@@ -83,8 +83,10 @@ class KanjiExtractor(NoteManager):
         return re.findall(KANJI_PATTERN, string) 
 
     def _already_exists(self, kanji):
-        nids = mw.col.findNotes('mid:' + str(self._config['kanji_mid']) + ' ' + self._config['kanji_field'] + ':' + kanji)
-
+        query = 'mid:{0} "{1}":"{2}"'.format(self._config['kanji_mid'], self._config['kanji_field'], kanji)
+        nids = mw.col.findNotes(query)
+        showInfo(query)
+        showInfo(str(len(nids)))
         if len(nids) == 0:
             return False
         else:

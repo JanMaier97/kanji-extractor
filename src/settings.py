@@ -78,7 +78,7 @@ class SettingsDialog(QDialog):
         self._config['common']['vocab_field'] = self.ui.vocab_field.currentText()
 
         self._config['common']['kanji_mid'] = mw.col.models.byName(self.ui.kanji_model.currentText())['id']
-        self._config['common']['kanji'] = self.ui.cb_kanji.currentText()
+        self._config['common']['kanji_field'] = self.ui.cb_kanji.currentText()
         self._config['common']['deck_id'] = mw.col.decks.byName(self.ui.kanji_deck.currentText())['id']
 
         self._config['kanjidic']['mid'] = self._config['common']['kanji_mid']
@@ -144,7 +144,8 @@ class SettingsDialog(QDialog):
             self.ui.kanji_model.setCurrentText(kanji_model['name'])
 
             if self._config['kanjidic']['kanji']:
-                self._set_kanji_field(self.ui.cb_kanji, self._config['kanjidic']['kanji'])
+                self._set_kanji_field(self.ui.cb_kanji, self._config['common']['kanji_field'])
+                # self._set_kanji_field(self.ui.cb_kanji, self._config['kanjidic']['kanji'])
             if self._config['kanjidic']['meaning']:
                 self._set_kanji_field(self.ui.cb_meaning, self._config['kanjidic']['meaning'])
             if self._config['kanjidic']['onyomi']:
