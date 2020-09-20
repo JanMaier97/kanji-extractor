@@ -1,4 +1,5 @@
 from aqt import mw
+from typing import List #, Set, Dict, Tuple, Optional
 
 class KanjiNote():
     def __init__(self):
@@ -20,7 +21,7 @@ class AnkiDAO():
     def get_model_fields(self, model_name):
         model = mw.col.models.byName(model_name)
         if model is None:
-            pass
+            raise InvalidModelError(model_name)
         return mw.col.models.fieldNames(model)
 
     def get_missing_kanji(self):
@@ -50,41 +51,33 @@ class ConfigError(Exception):
 
 class VocabConfigDAO():
     def __init__(self):
-
         self._config = mw.addonManager.getConfig(__name__)['vocab']
 
     def update_vocab_config(self, model_name: str, field_name: str) -> None:
         mid = _validate_model(model_name, [field_name])
-        self._config['vocab_mid'] = mid
-        self._config['vocab_field'] = field_name
-
-    def update_kanji_settings(self, deck_name, model_name, field_name):
-        mid = _validate_model(model_name, field_name)
-        self._config['kanji_mid'] = mid
-        self._config['kanji_field'] = field_name
-
-        deck = mw.col.decks.byName(deck_name)
-        if deck is None:
-            raise ConfigError
-        self._config['deck_id'] = deck['id']
+        self._config['mid'] = mid
+        self._config['field'] = field_name
 
     @property
     def vocab_model_name(self):
-        return mw.models.get(self._config['vocab_mid'])['name']
+        model = mw.col.models.get(self._config['mid'])
+        if model is None:
+            return None
+        return model['name']
     
     @property
     def vocab_field_name(self):
-        return self._config['vocab_field']
+        return self._config['field']
 
     def save(self):
         mw.addonManager.writeConfig(__name__, {'vocab': self._config}) 
 
 def _validate_model(model_name: str, field_name: str) -> int:
-    model = mw.models.byName(model_name)
+    model = mw.col.models.byName(model_name)
     if model is None:
         raise InvalidModelError(model_name)
 
-    missing_fields = [field for field in field_names if field not in mw.models.fieldNames(model)]
+    missing_fields = [field for field in field_names if field not in mw.col.models.fieldNames(model)]
     if len(missing_fields) > 0:
         raise MissingFieldsError(missing_fields)
 
@@ -94,9 +87,9 @@ def _validate_model(model_name: str, field_name: str) -> int:
 class KanjiDicConfigDAO():
     def __init__(self):
         self._config = mw.addonManager.getConfig(__name__)['kanjidic']
-        self._fields = config['fields']
+        self._fields = self._config['fields']
 
-    def update_note_config(self, model_name: str, kanji: str, meaning: str, onyomi: str, kunyomi: str, strokecount: str, frequency: str, radical: str) -> None:
+    def update_note_config(self, deck_name, model_name: str, kanji: str, meaning: str, onyomi: str, kunyomi: str, strokecount: str, frequency: str, radical: str) -> None:
         mid = _validate_model(model_name, [kanji, meaning, onyomi, kunyomi, strokecount, frequency, radical])
         self._config['mid'] = mid
         self._fields['kanji'] = kanji
@@ -106,6 +99,10 @@ class KanjiDicConfigDAO():
         self._fields['strokecount'] = strokecount
         self._fields['frequency'] = frequency
         self._fields['radical'] = radical
+        deck = mw.col.decks.byName(deck_name)
+        if deck is None:
+            raise ValueError
+        self._config['did'] = deck['id']
 
     def update_grade_tag(self, enabled, prefix, postfix):
         self._config['grade'] = enabled
@@ -122,7 +119,10 @@ class KanjiDicConfigDAO():
 
     @property
     def model_name(self):
-        return mw.models.get(self._config['kanji_mid'])['name']
+        model = mw.col.models.get(self._config['mid'])
+        if model is None:
+            return None
+        return model['name']
 
     @property
     def kanji(self):
@@ -178,7 +178,10 @@ class KanjiDicConfigDAO():
 
     @property
     def kanji_deck_name(self):
-        return mw.decks.get(self._config['deck_id'])
+        deck = mw.col.decks.get(self._config['did'], default=False)
+        if deck is None:
+            return None
+        return deck['name']
 
 
 class KanjiDAO():

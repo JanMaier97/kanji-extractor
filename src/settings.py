@@ -2,11 +2,16 @@ from aqt.qt import *
 from aqt import mw
 from aqt.utils import showInfo
 from .forms.settings import Ui_Settings 
+from .data_access import AnkiDAO, KanjiDicConfigDAO, VocabConfigDAO
 
 
 class SettingsDialog(QDialog):
     def __init__(self):
         super(SettingsDialog, self).__init__()
+
+        self._anki_dao = AnkiDAO()
+        self._vocab_config = VocabConfigDAO()
+        self._kanji_config = KanjiDicConfigDAO()
 
         self.ui = Ui_Settings()
         self._config = mw.addonManager.getConfig(__name__)
@@ -124,51 +129,54 @@ class SettingsDialog(QDialog):
 
 
     def _load_config(self):
-        vocab_model = mw.col.models.get(self._config['common']['vocab_mid'])
-        if not vocab_model is None:
-            self.ui.vocab_model.setCurrentText(vocab_model['name'])
+        vocab_model_name = self._vocab_config.vocab_model_name
+        if not vocab_model_name is None:
+            self.ui.vocab_model.setCurrentText(vocab_model_name)
 
-        deck = mw.col.decks.get(self._config['common']['deck_id'], default=False)
-        if not deck is None:
-            self.ui.kanji_deck.setCurrentText(deck['name'])
+        deck_name = self._kanji_config.kanji_deck_name
+        if not deck_name is None:
+            self.ui.kanji_deck.setCurrentText(deck_name)
 
-        kanji_model = mw.col.models.get(self._config['kanjidic']['mid'])
-        if kanji_model is None:
-            showInfo('Could not find the note type with the id "{0}" for the kanji notes.\nPlease check your configuration.'.format(self._config['kanjidic']['mid']))
+        kanji_model_name = self._kanji_config.model_name
+        if kanji_model_name is None:
+            showInfo('Could not find the note type for the kanji notes.\nPlease check your configuration.')
         else:
-
             for cb in self._kanji_field_cbs:
-                cb.addItems(mw.col.models.fieldNames(kanji_model))
+                cb.addItems(_anki_dao.get_model_fields(kanji_model_name))
                 cb.setCurrentIndex(0)
 
-            self.ui.kanji_model.setCurrentText(kanji_model['name'])
+            self.ui.kanji_model.setCurrentText(kanji_model_name)
 
-            if self._config['kanjidic']['kanji']:
-                self._set_kanji_field(self.ui.cb_kanji, self._config['common']['kanji_field'])
-                # self._set_kanji_field(self.ui.cb_kanji, self._config['kanjidic']['kanji'])
-            if self._config['kanjidic']['meaning']:
-                self._set_kanji_field(self.ui.cb_meaning, self._config['kanjidic']['meaning'])
-            if self._config['kanjidic']['onyomi']:
-                self._set_kanji_field(self.ui.cb_onyomi, self._config['kanjidic']['onyomi'])
-            if self._config['kanjidic']['kunyomi']:
-                self._set_kanji_field(self.ui.cb_kunyomi, self._config['kanjidic']['kunyomi'])
-            if self._config['kanjidic']['strokecount']:
-                self._set_kanji_field(self.ui.cb_strokecount, self._config['kanjidic']['strokecount'])
-            if self._config['kanjidic']['radical']:
-                self._set_kanji_field(self.ui.cb_radical, self._config['kanjidic']['radical'])
-            if self._config['kanjidic']['frequency']:
-                self._set_kanji_field(self.ui.cb_frequency, self._config['kanjidic']['frequency'])
+            if self._kanji_config.kanji:
+                self._set_kanji_field(self.ui.cb_kanji, self._kanji_config.kanji)
+
+            if self._kanji_config.meaning:
+                self._set_kanji_field(self.ui.cb_meaning, self._kanji_config.meaning)
+
+            if self._kanji_config.onyomi:
+                self._set_kanji_field(self.ui.cb_onyomi, self._kanji_config.onyomi)
+
+            if self._kanji_config.kunyomi:
+                self._set_kanji_field(self.ui.cb_kunyomi, self._kanji_config.kunyomi)
+
+            if self._kanji_config.strokecount:
+                self._set_kanji_field(self.ui.cb_strokecount, self._kanji_config.strokecount)
+
+            if self._kanji_config.radical:
+                self._set_kanji_field(self.ui.cb_radical, self._kanji_config.radical)
+
+            if self._kanji_config.frequency:
+                self._set_kanji_field(self.ui.cb_frequency, self._kanji_config.frequency)
         
         self.on_kanji_cb_activated(0)
 
+        self.ui.jlpt_check.setCheckState(self._kanji_config.jlpt_enabled)
+        self.ui.jlpt_prefix_line.setText(self._kanji_config.jlpt_prefix)
+        self.ui.jlpt_postfix_line.setText(self._kanji_config.jlpt_postfix)
 
-        self.ui.jlpt_check.setCheckState(self._config['kanjidic']['jlpt'])
-        self.ui.jlpt_prefix_line.setText(self._config['kanjidic']['jlpt_prefix'])
-        self.ui.jlpt_postfix_line.setText(self._config['kanjidic']['jlpt_postfix'])
-
-        self.ui.grade_check.setCheckState(self._config['kanjidic']['grade'])
-        self.ui.grade_prefix_line.setText(self._config['kanjidic']['grade_prefix'])
-        self.ui.grade_postfix_line.setText(self._config['kanjidic']['grade_postfix'])
+        self.ui.grade_check.setCheckState(self._kanji_config.grade_enabled)
+        self.ui.grade_prefix_line.setText(self._kanji_config.grade_prefix)
+        self.ui.grade_postfix_line.setText(self._kanji_config.grade_postfix)
 
     def _set_kanji_field(self, kanji_cb, field_text):
         if kanji_cb.findText(field_text) == -1:
