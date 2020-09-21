@@ -13,7 +13,7 @@ class AnkiDAO():
         pass
 
     def get_deck_names(self):
-        sorted(mw.col.decks.allNames(False))
+        return sorted(mw.col.decks.allNames(False))
 
     def get_model_names(self):
         return sorted(mw.col.models.allNames())
@@ -35,6 +35,10 @@ class AnkiDAO():
 
     def upsert_notes(self, notes):
         pass
+
+    def strip_tag(self, tag):
+        assert(not tag is None)
+        return mw.col.tags.split(tag.strip())[0]
 
 
 class InvalidModelError(Exception):
@@ -89,7 +93,16 @@ class KanjiDicConfigDAO():
         self._config = mw.addonManager.getConfig(__name__)['kanjidic']
         self._fields = self._config['fields']
 
-    def update_note_config(self, deck_name, model_name: str, kanji: str, meaning: str, onyomi: str, kunyomi: str, strokecount: str, frequency: str, radical: str) -> None:
+    def update_note_config(self,
+                           deck_name: str, 
+                           model_name: str,
+                           kanji: str,
+                           meaning: str,
+                           onyomi: str,
+                           kunyomi: str,
+                           strokecount: str,
+                           frequency: str,
+                           radical: str) -> None:
         mid = _validate_model(model_name, [kanji, meaning, onyomi, kunyomi, strokecount, frequency, radical])
         self._config['mid'] = mid
         self._fields['kanji'] = kanji
