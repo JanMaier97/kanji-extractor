@@ -1,5 +1,6 @@
 from aqt import mw
 from typing import List #, Set, Dict, Tuple, Optional
+from aqt.utils import showInfo
 
 class KanjiNote():
     def __init__(self):
@@ -58,6 +59,9 @@ class VocabConfigDAO():
         self._config = mw.addonManager.getConfig(__name__)['vocab']
 
     def update_vocab_config(self, model_name: str, field_name: str) -> None:
+        assert(model_name is not None)
+        assert(field_name is not None)
+
         mid = _validate_model(model_name, [field_name])
         self._config['mid'] = mid
         self._config['field'] = field_name
@@ -76,12 +80,18 @@ class VocabConfigDAO():
     def save(self):
         mw.addonManager.writeConfig(__name__, {'vocab': self._config}) 
 
-def _validate_model(model_name: str, field_name: str) -> int:
+def _validate_model(model_name: str, field_names: List[str]) -> int:
+    assert(model_name is not None)
+    assert(field_names is not None)
+
     model = mw.col.models.byName(model_name)
     if model is None:
         raise InvalidModelError(model_name)
 
-    missing_fields = [field for field in field_names if field not in mw.col.models.fieldNames(model)]
+    missing_fields = [field for field in field_names 
+                      if field not in mw.col.models.fieldNames(model)
+                      and field is not None]
+
     if len(missing_fields) > 0:
         raise MissingFieldsError(missing_fields)
 
@@ -92,6 +102,7 @@ class KanjiDicConfigDAO():
     def __init__(self):
         self._config = mw.addonManager.getConfig(__name__)['kanjidic']
         self._fields = self._config['fields']
+        showInfo(f"{self._config}")
 
     def update_note_config(self,
                            deck_name: str, 
@@ -103,6 +114,11 @@ class KanjiDicConfigDAO():
                            strokecount: str,
                            frequency: str,
                            radical: str) -> None:
+
+        assert(deck_name is not None)
+        assert(model_name is not None)
+        assert(kanji is not None)
+
         mid = _validate_model(model_name, [kanji, meaning, onyomi, kunyomi, strokecount, frequency, radical])
         self._config['mid'] = mid
         self._fields['kanji'] = kanji
@@ -113,8 +129,10 @@ class KanjiDicConfigDAO():
         self._fields['frequency'] = frequency
         self._fields['radical'] = radical
         deck = mw.col.decks.byName(deck_name)
+
         if deck is None:
             raise ValueError
+
         self._config['did'] = deck['id']
 
     def update_grade_tag(self, enabled, prefix, postfix):
@@ -128,6 +146,7 @@ class KanjiDicConfigDAO():
         self._config['jltp_postfix'] = postfix
 
     def save(self):
+        showInfo(f"{self._config}")
         mw.addonManager.writeConfig(__name__, {'kanjidic': self._config}) 
 
     @property

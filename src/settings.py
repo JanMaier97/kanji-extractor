@@ -91,16 +91,16 @@ class SettingsDialog(QDialog):
                                               self._get_selected_field(self.ui.cb_frequency),
                                               self._get_selected_field(self.ui.cb_radical))
 
-        self._kanji_config.update_grade_tag(self._get_selected_field(self.ui.grade_check),
-                                            self._get_selected_field(self.ui.grade_prefix_line),
-                                            self._get_selected_field(self.ui.grade_postfix_line))
+        self._kanji_config.update_grade_tag(self.ui.grade_check.checkState() ,
+                                            self.ui.grade_prefix_line.text(),
+                                            self.ui.grade_postfix_line.text())
 
-        self._kanji_config.update_jlpt_tag(self._get_selected_field(self.ui.jlpt_check),
-                                           self._get_selected_field(self.ui.jlpt_prefix_line),
-                                           self._get_selected_field(self.ui.jlpt_postfix_line))
+        self._kanji_config.update_jlpt_tag(self.ui.jlpt_check.checkState(),
+                                           self.ui.jlpt_prefix_line.text(),
+                                           self.ui.jlpt_postfix_line.text())
 
-        self._kanji_config.save()
         self._vocab_config.save()
+        self._kanji_config.save()
 
         self.accept()
 
