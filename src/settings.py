@@ -2,7 +2,9 @@ from aqt.qt import *
 from aqt import mw
 from aqt.utils import showInfo
 from .forms.settings import Ui_Settings 
-from .data_access import AnkiDAO, KanjiDicConfigDAO, VocabConfigDAO
+from .dao.anki_dao import AnkiDAO
+from .dao.kanji_dic_config_dao import KanjiDicConfigDAO
+from .dao.vocab_config_dao import VocabConfigDAO
 
 
 class SettingsDialog(QDialog):
