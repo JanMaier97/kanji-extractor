@@ -1,11 +1,9 @@
-tags
-
 user_files/
 src/forms
-
 /config.json
 meta.json
 /__init__.py
+.mypy_cache/
 
 # Swap
 [._]*.s[a-v][a-z]
@@ -22,7 +20,9 @@ Sessionx.vim
 # Temporary
 .netrwhist
 *~
+
 # Auto-generated tag files
 tags
+
 # Persistent undo
 [._]*.un~
