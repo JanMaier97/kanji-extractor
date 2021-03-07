@@ -1,9 +1,25 @@
 {
-    "common": {
-        "deck_id": 0,
-        "vocab_mid": 0,
-        "vocab_field": "",
-        "kanji_mid": 0, 
-        "kanji_field": ""
+    "vocab": {
+        "vocab_mid": null,
+        "vocab_field": null
+    },
+    "kanjidic": {
+        "did": 1,
+        "mid": null,
+        "grade": false,
+        "jlpt": false,
+        "jlpt_prefix": "JLPT_",
+        "jlpt_postfix": "",
+        "grade_prefix": "Kanji_Grade_",
+        "grade_postfix": "",
+        "fields": {
+            "kanji": null,
+            "meaning": null,
+            "onyomi": null,
+            "kunyomi": null,
+            "strokecount": null,
+            "radical": null,
+            "frequency": null
+        }
     }
 }
